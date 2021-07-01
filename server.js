@@ -3,8 +3,8 @@ const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const { v4: uuidV4} = require('uuid')
-
-
+var mynamesn = []
+var mynamesi = []
 
 
 app.set('view engine', 'ejs')
@@ -23,10 +23,26 @@ io.on('connection', socket => {
         socket.join(roomId)
         socket.broadcast.to(roomId).emit('user-connected', userId)
 
+        socket.on('createName', (ky, vls) => {
+            mynamesi.push(ky)
+            mynamesn.push(vls)
+            console.log(mynamesi)
+            console.log(mynamesn)
+            io.to(roomId).emit('giveName', mynamesi, mynamesn)
+        })
+
+        socket.on('message', (message) => {
+            //send message to the same room
+            var mesar = {message,userId}
+            io.to(roomId).emit('createMessage', (mesar))
+        });
+
         socket.on('disconnect', () =>{
             socket.broadcast.to(roomId).emit('user-disconnected', userId)
         })
     })
+    
+
 })
 
 

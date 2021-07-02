@@ -51,6 +51,7 @@ body{
 }
 
 .cab1-body{
+    position: relative;
     display: flex;
     flex-grow: 1;
     justify-content: center;
@@ -59,6 +60,28 @@ body{
 }
 
 .cab1-footer{
-    background-color: black;
+    background-color: transparent;
+    justify-content: space-between;
     color: white;
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    bottom: 3%;
+}
+
+.buttons_controls{
+    font-size: 175%;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    /* cursor: pointer; */
+}
+
+.fa-stack:hover .fa-circle{
+    color: #9296ff;
+
+} 
+
+.fa-circle {
+    color: #6264A7;
 }

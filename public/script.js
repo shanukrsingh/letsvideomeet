@@ -13,6 +13,7 @@ const myPeer = new Peer(null, {
 
 
 const myVideo = document.createElement('video')
+var myStream;
 myVideo.muted = true
 const peers = {}
 
@@ -20,6 +21,7 @@ navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
 }).then(stream => {
+    myStream = stream
     addVideoStream(myVideo, stream)
 
     myPeer.on('call',call => {
@@ -57,9 +59,9 @@ navigator.mediaDevices.getUserMedia({
     });
     socket.on("createMessage", (mesar) => {
         if (mesar.userId == myPeer.id) {
-            $("ul").append(`<li class="message" style="color: black !important;"><b>${myname.get(mesar.userId)}</b><br/>${mesar.message}</li>`);
+            $(".messages").append(`<li class="message" style="color: black !important;"><b>${myname.get(mesar.userId)}</b><br/>${mesar.message}</li>`);
         } else {
-            $("ul").append(`<li class="message"><b>${myname.get(mesar.userId)}</b><br/>${mesar.message}</li>`);
+            $(".messages").append(`<li class="message"><b>${myname.get(mesar.userId)}</b><br/>${mesar.message}</li>`);
         }
         scrollToBottom()
     
@@ -98,9 +100,77 @@ function addVideoStream(video, stream){
     })
     videoGrid.append(video)
 }
+function addVideoStreamFirst(video, stream){
+    video.srcObject = stream
+    video.addEventListener('loadedmetadata', () =>{
+        video.play()
+    })
+    videoGrid.insertBefore(video, videoGrid.firstChild)
+}
 
 const scrollToBottom = () => {
     var d = $('.main__chat_window');
     d.scrollTop(d.prop("scrollHeight"));
-  }
+}
   
+
+const muteUnmute = () => {
+    const enabled = myStream.getAudioTracks()[0].enabled;
+    if (enabled) {
+        myStream.getAudioTracks()[0].enabled = false;
+        setUnmuteButton();
+    } else {
+        setMuteButton();
+        myStream.getAudioTracks()[0].enabled = true;
+    }
+}
+
+const leaveMeeting = () => {
+    location.href = 'https://www.google.com';
+}
+
+const cameraC = () => {
+    const enabled = myStream.getVideoTracks()[0].enabled;
+    if (enabled) {
+        console.log(videoGrid)
+        myStream.getVideoTracks()[0].enabled = false;
+        videoGrid.firstChild.remove()
+        console.log(videoGrid)
+        unsetCamera();
+    } else {
+        console.log(videoGrid)
+        const video = document.createElement('video')
+        addVideoStreamFirst(video, myStream)
+        setCamera();
+        myStream.getVideoTracks()[0].enabled = true;
+        console.log(videoGrid)
+    }
+}
+
+const setMuteButton = () => {
+    const html = `
+      <i class="fas fa-microphone"></i>
+    `
+    document.querySelector('.main__mute_button').innerHTML = html;
+}
+  
+const setUnmuteButton = () => {
+    const html = `
+        <i class="unmute fas fa-microphone-slash"></i>
+    `
+    document.querySelector('.main__mute_button').innerHTML = html;
+}
+
+const setCamera = () => {
+    const html = `
+      <i class="fas fa-video"></i>
+    `
+    document.querySelector('.main__video_button').innerHTML = html;
+}
+  
+const unsetCamera = () => {
+    const html = `
+        <i class="unmute fas fa-video-slash"></i>
+    `
+    document.querySelector('.main__video_button').innerHTML = html;
+}

@@ -8,6 +8,7 @@
         const ROOM_ID = "<%= roomId %>"
     </script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     
     <title>Lets Video Meet</title>
@@ -44,10 +45,37 @@
             </div>
             <div class="cab1-body">
                 <div id="video-grid"></div>
+                <div class="cab1-footer">
+                    <div class="buttons_controls">
+                        <span class="fa-stack" style="align-items: center;">
+                            <i class="fas fa-circle fa-stack-2x"></i>
+                            <div class="mbutton fa-stack-1x fa-inverse">
+                                <div onclick="muteUnmute()" class="main__mute_button">
+                                    <i class="fas fa-microphone"></i>
+                                </div>
+                            </div>                         
+                        </span>
+                        <span class="fa-stack" style="align-items: center;">
+                            <i class="fas fa-circle fa-stack-2x"></i>
+                            <div class="mbutton fa-stack-1x fa-inverse">
+                                <div onclick="cameraC()" class="main__video_button" >
+                                    <i class="fas fa-video"></i>
+                                </div>
+                            </div>                         
+                        </span>
+                        <span class="fa-stack" style="align-items: center;">
+                            <i class="fas fa-circle fa-stack-2x"></i>
+                            <div class="mbutton fa-stack-1x fa-inverse">
+                                <div onclick="leaveMeeting()" class="leave_button" >
+                                    <i class="fas fa-times"></i>
+                                </div>
+                            </div>                         
+                        </span>
+                        
+                    </div>
+                </div>
             </div>
-            <div class="cab1-footer">
-                <h3>Controls</h3>
-            </div>
+            
         </div>
         <div class="cab2">
             <h3>Chats</h3>

@@ -3,12 +3,20 @@ body{
     padding: 0 !important;
 }
 
+h1,h2,h3,h4,h5,h6{
+    color:white;
+    padding: 10px 0 0 15px;
+}
+
 .bag{
     height: 100vh;
     display: flex;
 }
 
-.cab2{
+.cab2,.cab2b{
+    background-color: rgb(22, 22, 22);
+    max-width: 20% !important;
+    min-width: 20% !important;
     flex: 0.2;
     display: flex;
     flex-direction: column;
@@ -17,30 +25,59 @@ body{
 .main__chat_window {
     flex-grow: 1;
     overflow-y: auto;
-    color: yellow;
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
 }
 
-.messages{
-    color: red;
+.main__chat_window::-webkit-scrollbar,.cab1-body::-webkit-scrollbar{
+    display: none;
+}
+
+.messages,.userslist{
+    margin: 0 !important;
+    padding: 0 !important;
+    word-wrap: break-word !important;
     list-style: none;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.message,.usernames{
+    word-wrap: break-word !important;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 3% !important;
+    padding: 2% 4% !important;
+    border-radius: 6px;
+    color: white;
+    background-color: #6264A7;
+}
+
+.message span{
+    font-weight:500;
 }
 
 .main__message_container {
-    padding: 22px 12px;
+    min-height: 8% !important;
     display: flex;
-    color: blue;
+    background-color: transparent;
+    justify-content: center;
 }
 
 .main__message_container input {
-    flex-grow: 1;
-    background-color: transparent;
-    border: none;
-    color: green;
+    position: fixed;
+    bottom: 2%;
+    width: 18% !important;
+    border: none !important;
+    border-radius: 6px;
+    padding: 0 0.5%;
+    background-color: white;
+    color: black;
 }
 
 
 .cab1{
-    flex: 0.8;
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
@@ -51,30 +88,23 @@ body{
 }
 
 .cab1-body{
-    position: relative;
-    display: flex;
     flex-grow: 1;
-    justify-content: center;
-    align-items: center;
+    align-content: center !important;
+    overflow-y: auto;
     background-color: black;
 }
 
 .cab1-footer{
-    background-color: transparent;
-    justify-content: space-between;
-    color: white;
     display: flex;
-    flex-direction: row;
-    position: fixed;
-    bottom: 3%;
+    justify-content: center;
 }
 
 .buttons_controls{
+    position: fixed;
+    bottom: 3%;
+    color: white;
     font-size: 175%;
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    /* cursor: pointer; */
+    cursor: pointer;
 }
 
 .fa-stack:hover .fa-circle{
@@ -84,4 +114,4 @@ body{
 
 .fa-circle {
     color: #6264A7;
-}
+} 

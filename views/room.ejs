@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <script>
         const ROOM_ID = "<%= roomId %>"
     </script>
@@ -18,7 +19,6 @@
             /* display: grid;
             grid-template-columns: repeat(auto-fill, 300px);
             grid-auto-rows: 300px; */
-
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
@@ -45,49 +45,70 @@
             </div>
             <div class="cab1-body">
                 <div id="video-grid"></div>
-                <div class="cab1-footer">
-                    <div class="buttons_controls">
-                        <span class="fa-stack" style="align-items: center;">
-                            <i class="fas fa-circle fa-stack-2x"></i>
-                            <div class="mbutton fa-stack-1x fa-inverse">
-                                <div onclick="muteUnmute()" class="main__mute_button">
-                                    <i class="fas fa-microphone"></i>
-                                </div>
-                            </div>                         
-                        </span>
-                        <span class="fa-stack" style="align-items: center;">
-                            <i class="fas fa-circle fa-stack-2x"></i>
-                            <div class="mbutton fa-stack-1x fa-inverse">
-                                <div onclick="cameraC()" class="main__video_button" >
-                                    <i class="fas fa-video"></i>
-                                </div>
-                            </div>                         
-                        </span>
-                        <span class="fa-stack" style="align-items: center;">
-                            <i class="fas fa-circle fa-stack-2x"></i>
-                            <div class="mbutton fa-stack-1x fa-inverse">
-                                <div onclick="leaveMeeting()" class="leave_button" >
-                                    <i class="fas fa-times"></i>
-                                </div>
-                            </div>                         
-                        </span>
-                        
-                    </div>
+            </div>
+            <div class="cab1-footer">
+                <div class="buttons_controls">
+                    <span class="fa-stack" style="align-items: center;">
+                        <i class="fas fa-circle fa-stack-2x"></i>
+                        <div class="mbutton fa-stack-1x fa-inverse">
+                            <div onclick="muteUnmute()" class="main__mute_button">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                        </div>                         
+                    </span>
+                    <span class="fa-stack" style="align-items: center;">
+                        <i class="fas fa-circle fa-stack-2x"></i>
+                        <div class="mbutton fa-stack-1x fa-inverse">
+                            <div onclick="cameraC()" class="main__video_button" >
+                                <i class="fas fa-video"></i>
+                            </div>
+                        </div>                         
+                    </span>
+                    <span class="fa-stack" style="align-items: center;">
+                        <i class="fas fa-circle fa-stack-2x"></i>
+                        <div class="mbutton fa-stack-1x fa-inverse">
+                            <div onclick="leaveMeeting()" class="leave_button" >
+                                <i class="fas fa-times"></i>
+                            </div>
+                        </div>                         
+                    </span>
+                    <span class="fa-stack" style="align-items: center;">
+                        <i class="fas fa-circle fa-stack-2x"></i>
+                        <div class="mbutton fa-stack-1x fa-inverse">
+                            <div onclick="controlchat()" class="chaticon" >
+                                <i class="fas fa-comment-alt"></i>
+                            </div>
+                        </div>                         
+                    </span>
+                    
                 </div>
             </div>
             
         </div>
-        <div class="cab2">
+        <div class="cab2" id="dispon" style="display: none;">
             <h3>Chats</h3>
             <div class="main__chat_window">
                 <ul class="messages">
                     
                 </ul>
-             </div>
-             <div class="main__message_container">
+                
+            </div>
+            <div class="main__message_container">
                 <input id="chat_message" type="text" placeholder="Type message here...">
-             </div>
+            </div>
+            
+            
         </div>
+        <div class="cab2b" id="dispon" style="display: flex;">
+            <h3>Participants</h3>
+            <div class="listofusers">
+                <ul class="userslist">
+                    
+                </ul>
+                
+            </div>            
+        </div>
+        
     </div>
 
 

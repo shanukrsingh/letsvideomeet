@@ -44,6 +44,9 @@ navigator.mediaDevices.getUserMedia({
         for (let i = 0; i < ky.length; i++) {
             myname.set(mynamei[i], mynamen[i])
         }
+
+        updatenames();
+
     })
 
     let text = $("input");
@@ -59,9 +62,9 @@ navigator.mediaDevices.getUserMedia({
     });
     socket.on("createMessage", (mesar) => {
         if (mesar.userId == myPeer.id) {
-            $(".messages").append(`<li class="message" style="color: black !important;"><b>${myname.get(mesar.userId)}</b><br/>${mesar.message}</li>`);
+            $(".messages").append(`<li class="message" style="text-align: right !important;"><span style = "color: #363875;">${myname.get(mesar.userId)} (me)</span><br/>${mesar.message}</li>`);
         } else {
-            $(".messages").append(`<li class="message"><b>${myname.get(mesar.userId)}</b><br/>${mesar.message}</li>`);
+            $(".messages").append(`<li class="message"><span>${myname.get(mesar.userId)}</span><br/>${mesar.message}</li>`);
         }
         scrollToBottom()
     
@@ -71,6 +74,8 @@ navigator.mediaDevices.getUserMedia({
 
 socket.on('user-disconnected', userId => {
     if(peers[userId]) peers[userId].close()
+    myname.delete(userId)
+    updatenames();
 })
 
 myPeer.on('open', id => {
@@ -89,7 +94,7 @@ function connectToNewUser(userId, stream) {
         video.remove()
     })
 
-    peers[userId] = call    
+    peers[userId] = call   
 }
 
 
@@ -100,12 +105,15 @@ function addVideoStream(video, stream){
     })
     videoGrid.append(video)
 }
-function addVideoStreamFirst(video, stream){
-    video.srcObject = stream
-    video.addEventListener('loadedmetadata', () =>{
-        video.play()
-    })
-    videoGrid.insertBefore(video, videoGrid.firstChild)
+
+function updatenames() {
+
+    document.querySelector('.userslist').innerHTML = ' ';
+
+        for (let temp of myname.values()) {
+            $(".userslist").append(`<li class="usernames"><span> ${temp}</span></li>`);  
+            console.log(temp)
+        }
 }
 
 const scrollToBottom = () => {
@@ -126,24 +134,17 @@ const muteUnmute = () => {
 }
 
 const leaveMeeting = () => {
-    location.href = 'https://www.google.com';
+    location.href = 'endscreen';
 }
 
-const cameraC = () => {
+var cameraC = () => {
     const enabled = myStream.getVideoTracks()[0].enabled;
     if (enabled) {
-        console.log(videoGrid)
         myStream.getVideoTracks()[0].enabled = false;
-        videoGrid.firstChild.remove()
-        console.log(videoGrid)
         unsetCamera();
     } else {
-        console.log(videoGrid)
-        const video = document.createElement('video')
-        addVideoStreamFirst(video, myStream)
-        setCamera();
         myStream.getVideoTracks()[0].enabled = true;
-        console.log(videoGrid)
+        setCamera();
     }
 }
 
@@ -174,3 +175,32 @@ const unsetCamera = () => {
     `
     document.querySelector('.main__video_button').innerHTML = html;
 }
+
+const controlchat = () => {
+    var dispattribute = document.querySelector('.cab2').getAttribute('id')
+    if (dispattribute == 'dispon') {
+        var dispattribute = document.querySelector('.cab2').setAttribute('id', 'dispoff')
+        var dispattribute = document.querySelector('.cab2').setAttribute('style', 'display: none;')
+    } else {
+        var dispattribute = document.querySelector('.cab2').setAttribute('id', 'dispon')
+        var dispattribute = document.querySelector('.cab2').setAttribute('style', 'flex: 0.2;display: flex;flex-direction: column;')
+    }
+}
+
+
+// var waitc;
+// const setButtons = () => {
+//     waitc = true;
+//     console.log(document.querySelector('.cab1-footer').getAttribute('style'));
+//     document.querySelector('.cab1-footer').setAttribute('style', "display: flex;");
+//     console.log(document.querySelector('.cab1-footer').getAttribute('style'));
+//     setTimeout(function(){
+//         // waitc = false;
+//         if (waitc == true) {
+//             return;
+//         }
+//         document.querySelector('.cab1-footer').setAttribute('style', "display: none;");
+//         console.log('finally complete');
+//     },5000);
+//     console.log('complete');
+// }

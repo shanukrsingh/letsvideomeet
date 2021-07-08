@@ -7,6 +7,7 @@
     
     <script>
         const ROOM_ID = "<%= roomId %>"
+        const USERHASID = "<%= userhasname %>"
     </script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -80,12 +81,20 @@
                             </div>
                         </div>                         
                     </span>
+                    <span class="fa-stack" style="align-items: center;">
+                        <i class="fas fa-circle fa-stack-2x"></i>
+                        <div class="mbutton fa-stack-1x fa-inverse">
+                            <div onclick="controlusers()" class="usersicon" >
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>                         
+                    </span>
                     
                 </div>
             </div>
             
         </div>
-        <div class="cab2" id="dispon" style="display: none;">
+        <div class="cab2" id="dispoff" style="display: none;">
             <h3>Chats</h3>
             <div class="main__chat_window">
                 <ul class="messages">
@@ -99,7 +108,7 @@
             
             
         </div>
-        <div class="cab2b" id="dispon" style="display: flex;">
+        <div class="cab2b" id="dispoff" style="display: none;">
             <h3>Participants</h3>
             <div class="listofusers">
                 <ul class="userslist">

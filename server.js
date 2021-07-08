@@ -5,6 +5,8 @@ const io = require('socket.io')(server)
 const { v4: uuidV4} = require('uuid')
 const { uniqueNamesGenerator, names } = require('unique-names-generator');
 var lastguy = []
+var vy;
+var giveroom;
 
 var mynamesn = new Map()
 var mynamesi = new Map()
@@ -14,8 +16,14 @@ app.set('view engine', 'ejs')
 app.use(express.static('public'))
 
 app.get('/',(req, res) => {
-    res.redirect(`/${uuidV4()}`)
+    res.render('startscreen')
 })
+
+app.get('/clubreq', function(req, res){
+    vy = req.query.usernamed;   
+    giveroom = req.query.giveroomid;   
+    res.redirect(`/${giveroom}`)
+});
 
 app.get('/endscreen', (req, res) => {
     res.render('endscreen', {roomId: lastguy[(lastguy.length-1)]})
@@ -23,7 +31,9 @@ app.get('/endscreen', (req, res) => {
 })
 
 app.get('/:room', (req, res) => {
-    res.render('room', {roomId: req.params.room})
+    console.log('given name : '+vy)
+    console.log('given room : '+giveroom)
+    res.render('room', {roomId: req.params.room, userhasname: vy})
 })
 
 
@@ -67,9 +77,11 @@ io.on('connection', socket => {
 
         socket.on('disconnect', () =>{
             lastguy.push(roomId)
+
+            
             var tmp = []
             tmp = mynamesi.get(roomId)
-            var ind = lastguy.indexOf(userId)
+            var ind = tmp.indexOf(userId)
             tmp.splice(ind,1)
             mynamesi.set(roomId, tmp)
 
@@ -78,6 +90,7 @@ io.on('connection', socket => {
             mynamesn.set(roomId, tmp)
 
             io.to(roomId).emit('user-disconnected', userId)
+
         })
     })
     

@@ -6,7 +6,7 @@ var mynamei = []
 var mynamen = []
 
 
-const myPeer = new Peer(null, {
+const myPeer = new Peer(USERHASID, {
     debug: 2 
 });
 
@@ -179,11 +179,25 @@ const unsetCamera = () => {
 const controlchat = () => {
     var dispattribute = document.querySelector('.cab2').getAttribute('id')
     if (dispattribute == 'dispon') {
-        var dispattribute = document.querySelector('.cab2').setAttribute('id', 'dispoff')
-        var dispattribute = document.querySelector('.cab2').setAttribute('style', 'display: none;')
+        document.querySelector('.cab2').setAttribute('id', 'dispoff')
+        $('.cab2').css('display','none')
     } else {
-        var dispattribute = document.querySelector('.cab2').setAttribute('id', 'dispon')
-        var dispattribute = document.querySelector('.cab2').setAttribute('style', 'flex: 0.2;display: flex;flex-direction: column;')
+        document.querySelector('.cab2').setAttribute('id', 'dispon')
+        document.querySelector('.cab2b').setAttribute('id', 'dispoff')
+        $('.cab2b').css('display','none')
+        $('.cab2').css('display','flex')
+    }
+}
+const controlusers = () => {
+    var dispattribute = document.querySelector('.cab2b').getAttribute('id')
+    if (dispattribute == 'dispon') {
+        document.querySelector('.cab2b').setAttribute('id', 'dispoff')
+        $('.cab2b').css('display','none')
+    } else {
+        document.querySelector('.cab2b').setAttribute('id', 'dispon')
+        document.querySelector('.cab2').setAttribute('id', 'dispoff')
+        $('.cab2').css('display','none')
+        $('.cab2b').css('display','flex')
     }
 }
 

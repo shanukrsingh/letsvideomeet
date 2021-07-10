@@ -36,15 +36,10 @@ navigator.mediaDevices.getUserMedia({
         connectToNewUser(userId, stream)
     })
 
-    socket.on('giveName', (ky, vls) => {
+    socket.on('giveName', (ky) => {
         mynamei = ky
-        mynamen = vls
         console.log(mynamei)
-        console.log(mynamen)
-        for (let i = 0; i < ky.length; i++) {
-            myname.set(mynamei[i], mynamen[i])
-        }
-
+        
         updatenames();
 
     })
@@ -62,9 +57,9 @@ navigator.mediaDevices.getUserMedia({
     });
     socket.on("createMessage", (mesar) => {
         if (mesar.userId == myPeer.id) {
-            $(".messages").append(`<li class="message" style="text-align: right !important;"><span style = "color: #363875;">${myname.get(mesar.userId)} (me)</span><br/>${mesar.message}</li>`);
+            $(".messages").append(`<li class="message" style="text-align: right !important;"><span style = "color: #363875;">${mesar.userId} (me)</span><br/>${mesar.message}</li>`);
         } else {
-            $(".messages").append(`<li class="message"><span>${myname.get(mesar.userId)}</span><br/>${mesar.message}</li>`);
+            $(".messages").append(`<li class="message"><span>${mesar.userId}</span><br/>${mesar.message}</li>`);
         }
         scrollToBottom()
     
@@ -74,13 +69,14 @@ navigator.mediaDevices.getUserMedia({
 
 socket.on('user-disconnected', userId => {
     if(peers[userId]) peers[userId].close()
-    myname.delete(userId)
+    var ind = mynamei.indexOf(userId)
+    mynamei.splice(ind,1)
     updatenames();
 })
 
 myPeer.on('open', id => {
     socket.emit('join-room', ROOM_ID, id)
-    socket.emit('createName', id, Math.random())
+    socket.emit('createName', id)
 })
 
 
@@ -110,7 +106,7 @@ function updatenames() {
 
     document.querySelector('.userslist').innerHTML = ' ';
 
-        for (let temp of myname.values()) {
+        for (let temp of mynamei) {
             $(".userslist").append(`<li class="usernames"><span> ${temp}</span></li>`);  
             console.log(temp)
         }

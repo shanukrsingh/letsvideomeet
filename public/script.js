@@ -7,7 +7,7 @@ var mynamen = []
 
 
 const myPeer = new Peer(USERHASID, {
-    debug: 2 
+    debug: 2
 });
 
 
@@ -24,22 +24,29 @@ navigator.mediaDevices.getUserMedia({
     myStream = stream
     addVideoStream(myVideo, stream)
 
-    myPeer.on('call',call => {
+    myPeer.on('call', call => {
         call.answer(stream)
         const video = document.createElement('video')
         call.on('stream', userVideoStream => {
             addVideoStream(video, userVideoStream)
         })
+        call.on('close', () => {
+            console.log('removed from : ' + myPeer.id);
+            video.remove()
+        })
+        console.log(call)
+        peers[call.peer] = call;
     })
-    
+
     socket.on('user-connected', userId => {
         connectToNewUser(userId, stream)
     })
 
+
     socket.on('giveName', (ky) => {
         mynamei = ky
         console.log(mynamei)
-        
+
         updatenames();
 
     })
@@ -48,10 +55,10 @@ navigator.mediaDevices.getUserMedia({
     // when press enter send message
     $('html').keydown(function (e) {
         if (e.which == 13 && text.val().length !== 0) {
-        // console.log(myname)
-        socket.emit('message', text.val());
-        text.val('')
-        
+            // console.log(myname)
+            socket.emit('message', text.val());
+            text.val('')
+
         }
 
     });
@@ -62,15 +69,17 @@ navigator.mediaDevices.getUserMedia({
             $(".messages").append(`<li class="message"><span>${mesar.userId}</span><br/>${mesar.message}</li>`);
         }
         scrollToBottom()
-    
+
     })
 
 })
 
+
+
 socket.on('user-disconnected', userId => {
-    if(peers[userId]) peers[userId].close()
+    if (peers[userId]) peers[userId].close()
     var ind = mynamei.indexOf(userId)
-    mynamei.splice(ind,1)
+    mynamei.splice(ind, 1)
     updatenames();
 })
 
@@ -86,17 +95,18 @@ function connectToNewUser(userId, stream) {
     call.on('stream', userVideoStream => {
         addVideoStream(video, userVideoStream)
     })
-    call.on('close', () =>{
+    call.on('close', () => {
+        console.log('removed from : ' + myPeer.id);
         video.remove()
     })
 
-    peers[userId] = call   
+    peers[userId] = call
 }
 
 
-function addVideoStream(video, stream){
+function addVideoStream(video, stream) {
     video.srcObject = stream
-    video.addEventListener('loadedmetadata', () =>{
+    video.addEventListener('loadedmetadata', () => {
         video.play()
     })
     videoGrid.append(video)
@@ -106,17 +116,17 @@ function updatenames() {
 
     document.querySelector('.userslist').innerHTML = ' ';
 
-        for (let temp of mynamei) {
-            $(".userslist").append(`<li class="usernames"><span> ${temp}</span></li>`);  
-            console.log(temp)
-        }
+    for (let temp of mynamei) {
+        $(".userslist").append(`<li class="usernames"><span> ${temp}</span></li>`);
+        console.log(temp)
+    }
 }
 
 const scrollToBottom = () => {
     var d = $('.main__chat_window');
     d.scrollTop(d.prop("scrollHeight"));
 }
-  
+
 
 const muteUnmute = () => {
     const enabled = myStream.getAudioTracks()[0].enabled;
@@ -130,7 +140,7 @@ const muteUnmute = () => {
 }
 
 const leaveMeeting = () => {
-    location.href = 'endscreen';
+    location.href = `clubreq?usernamed=${USERHASID}&giveroomid=${ROOM_ID}`
 }
 
 var cameraC = () => {
@@ -150,7 +160,7 @@ const setMuteButton = () => {
     `
     document.querySelector('.main__mute_button').innerHTML = html;
 }
-  
+
 const setUnmuteButton = () => {
     const html = `
         <i class="unmute fas fa-microphone-slash"></i>
@@ -164,7 +174,7 @@ const setCamera = () => {
     `
     document.querySelector('.main__video_button').innerHTML = html;
 }
-  
+
 const unsetCamera = () => {
     const html = `
         <i class="unmute fas fa-video-slash"></i>
@@ -176,24 +186,26 @@ const controlchat = () => {
     var dispattribute = document.querySelector('.cab2').getAttribute('id')
     if (dispattribute == 'dispon') {
         document.querySelector('.cab2').setAttribute('id', 'dispoff')
-        $('.cab2').css('display','none')
+        $('.cab2').css('display', 'none')
     } else {
         document.querySelector('.cab2').setAttribute('id', 'dispon')
         document.querySelector('.cab2b').setAttribute('id', 'dispoff')
-        $('.cab2b').css('display','none')
-        $('.cab2').css('display','flex')
+        $('.cab2b').css('display', 'none')
+        $('.cab2').css('display', 'flex')
     }
+
+    scrollToBottom()
 }
 const controlusers = () => {
     var dispattribute = document.querySelector('.cab2b').getAttribute('id')
     if (dispattribute == 'dispon') {
         document.querySelector('.cab2b').setAttribute('id', 'dispoff')
-        $('.cab2b').css('display','none')
+        $('.cab2b').css('display', 'none')
     } else {
         document.querySelector('.cab2b').setAttribute('id', 'dispon')
         document.querySelector('.cab2').setAttribute('id', 'dispoff')
-        $('.cab2').css('display','none')
-        $('.cab2b').css('display','flex')
+        $('.cab2').css('display', 'none')
+        $('.cab2b').css('display', 'flex')
     }
 }
 

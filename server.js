@@ -19,7 +19,27 @@ app.get('/', (req, res) => {
     res.render('startscreen')
 })
 
+
 app.get('/clubreq', function (req, res) {
+    vy = req.query.usernamed;
+    giveroom = req.query.giveroomid;
+
+    var tmp = mynamesi.get(giveroom)
+    if (tmp == null) {
+        tmp = []
+    }
+
+    var ind = tmp.indexOf(vy)
+    if (ind >= 0) {
+        res.redirect('/')
+    } else {
+        res.render('chatscreen', { roomId: giveroom, userhasname: vy })
+    }
+
+});
+
+
+app.get('/clubhome', function (req, res) {
     vy = req.query.usernamed;
     giveroom = req.query.giveroomid;
 
@@ -57,10 +77,41 @@ async function main() {
 
 
     io.on('connection', socket => {
+
+
+        socket.on('join-roomfromchat', (roomId, userId) => {
+            socket.join(roomId)
+            let chat = client.db('chatbase').collection(`${roomId}`);
+
+
+            chat.find().limit(100).sort({ _id: 1 }).toArray(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+
+                // Emit the messages
+                res.forEach(element => {
+                    var mesar = { 'message': `${element.message}`, 'userId': `${element.username}` }
+                    socket.emit('createMessage', (mesar))
+                });
+            });
+
+
+            socket.on('message', (message) => {
+                //send message to the same room
+                var mesar = { message, userId }
+                chat.insertOne({ 'username': `${userId}`, 'message': `${message}` })
+                io.to(roomId).emit('createMessage', (mesar))
+            });
+
+        })
+
+
         socket.on('join-room', (roomId, userId) => {
             let chat = client.db('chatbase').collection(`${roomId}`);
             socket.join(roomId)
             socket.broadcast.to(roomId).emit('user-connected', userId)
+
 
             socket.on('createName', (ky) => {
 
@@ -75,7 +126,22 @@ async function main() {
 
                 console.log(mynamesi.get(roomId))
                 io.to(roomId).emit('giveName', mynamesi.get(roomId))
+
+
+                chat.find().limit(100).sort({ _id: 1 }).toArray(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+
+                    // Emit the messages
+                    res.forEach(element => {
+                        var mesar = { 'message': `${element.message}`, 'userId': `${element.username}` }
+                        socket.emit('createMessage', (mesar))
+                    });
+                });
             })
+
+
 
             socket.on('message', (message) => {
                 //send message to the same room
@@ -87,17 +153,18 @@ async function main() {
             socket.on('disconnect', () => {
                 lastguy.push(roomId)
 
-
                 var tmp = []
                 tmp = mynamesi.get(roomId)
                 var ind = tmp.indexOf(userId)
                 tmp.splice(ind, 1)
                 mynamesi.set(roomId, tmp)
 
-                io.to(roomId).emit('user-disconnected', userId)
+                socket.broadcast.to(roomId).emit('user-disconnected', userId)
 
             })
         })
+
+
 
     })
 

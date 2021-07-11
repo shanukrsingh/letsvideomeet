@@ -52,7 +52,7 @@ app.get('/clubhome', function (req, res) {
     if (ind >= 0) {
         res.redirect('/')
     } else {
-        res.redirect(`/${giveroom}`)
+        res.redirect(`/rooms`)
     }
 
 });
@@ -62,10 +62,15 @@ app.get('/endscreen', (req, res) => {
     lastguy.pop()
 })
 
-app.get('/:room', (req, res) => {
+app.get('/rooms', (req, res) => {
     console.log('given name : ' + vy)
     console.log('given room : ' + giveroom)
-    res.render('room', { roomId: req.params.room, userhasname: vy })
+    res.render('room', { roomId: giveroom, userhasname: vy })
+})
+
+app.get('/:room', (req, res) => {
+
+    res.render('startscreen2', { roomhasid: req.params.room })
 })
 
 server.listen(process.env.PORT || 3000)

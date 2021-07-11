@@ -209,6 +209,26 @@ const controlusers = () => {
     }
 }
 
+const copylink = () => {
+    var textArea = document.createElement("textarea");
+    textArea.value = `${document.location.href}`
+    document.body.appendChild(textArea);
+
+
+    /* Select the text field */
+    textArea.select();
+    textArea.setSelectionRange(0, 99999); /* For mobile devices */
+
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+
+
+    /* Alert the copied text */
+    alert("Copied Invite Link : " + textArea.value);
+
+    document.body.removeChild(textArea);
+}
+
 
 // var waitc;
 // const setButtons = () => {

@@ -10,11 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
-    <title>MongoChat</title>
+    <title>Lets Video Meet | Chat</title>
 
     <script>
         const ROOM_ID = "<%= roomId %>"
         const USERHASID = "<%= userhasname %>"
+        window.history.replaceState('', '', `/${ROOM_ID}`);
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -130,11 +131,33 @@
             cursor: pointer;
         }
 
+        .chaticon:hover {
+            border: none !important;
+            color: #8776F2;
+        }
+
         .topheader {
             position: fixed;
             top: 0;
             left: 0;
             width: 20%;
+
+        }
+
+        .closeheader {
+            position: fixed;
+            top: 1%;
+            right: 0;
+            font-size: 200%;
+            cursor: pointer;
+        }
+
+        .fa-stack {
+            margin-top: 5% !important;
+        }
+
+        .fa-stack:hover .fa-circle {
+            color: rgb(163, 7, 7) !important;
 
         }
     </style>
@@ -169,6 +192,34 @@
 
 
         </div>
+        <div class="closeheader">
+            <span class="fa-stack" style="align-items: center;">
+                <i class="fas fa-circle fa-stack-2x" style="color:#6264A7;"></i>
+                <div class="mbutton fa-stack-1x fa-inverse">
+                    <div onclick="leaveMeeting()" class="leave_button">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+            </span>
+            <br>
+            <span class="fa-stack" style="align-items: center;">
+                <i class="fas fa-circle fa-stack-2x" style="color:#6264A7;"></i>
+                <div class="mbutton fa-stack-1x fa-inverse">
+                    <div onclick="copylink()" class="copy_button">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                </div>
+            </span>
+            <br>
+            <span class="fa-stack" style="align-items: center;">
+                <i class="fas fa-circle fa-stack-2x" style="color:#6264A7;"></i>
+                <div class="mbutton fa-stack-1x fa-inverse">
+                    <div onclick="govideomode()" class="video_button">
+                        <i class="fas fa-video"></i>
+                    </div>
+                </div>
+            </span>
+        </div>
     </div>
 
 
@@ -178,37 +229,37 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script defer>
-            (function () {
+        (function () {
 
-                // Connect to socket.io
-                const socket = io('/');
-                console.log('Connected to socket...');
-                socket.emit('join-roomfromchat', ROOM_ID, USERHASID)
+            // Connect to socket.io
+            const socket = io('/');
+            console.log('Connected to socket...');
+            socket.emit('join-roomfromchat', ROOM_ID, USERHASID)
 
-                let text = $("input");
-                // when press enter send message
-                $('html').keydown(function (e) {
-                    if (e.which == 13 && text.val().length !== 0) {
-                        // console.log(myname)
-                        socket.emit('message', text.val());
-                        text.val('')
+            let text = $("input");
+            // when press enter send message
+            $('html').keydown(function (e) {
+                if (e.which == 13 && text.val().length !== 0) {
+                    // console.log(myname)
+                    socket.emit('message', text.val());
+                    text.val('')
 
-                    }
+                }
 
-                });
-                socket.on("createMessage", (mesar) => {
-                    if (mesar.userId == USERHASID) {
-                        $(".messages").append(`<li class="message" style="text-align: right !important;"><span style = "color: #363875;">${mesar.userId} (me)</span><br/>${mesar.message}</li>`);
-                    } else {
-                        $(".messages").append(`<li class="message"><span>${mesar.userId}</span><br/>${mesar.message}</li>`);
-                    }
-                    scrollToBottom()
+            });
+            socket.on("createMessage", (mesar) => {
+                if (mesar.userId == USERHASID) {
+                    $(".messages").append(`<li class="message" style="text-align: right !important;"><span style = "color: #363875;">${mesar.userId} (me)</span><br/>${mesar.message}</li>`);
+                } else {
+                    $(".messages").append(`<li class="message"><span>${mesar.userId}</span><br/>${mesar.message}</li>`);
+                }
+                scrollToBottom()
 
-                })
+            })
 
 
 
-            })();
+        })();
 
         const scrollToBottom = () => {
             var d = $('.main__chat_window');
@@ -216,6 +267,29 @@
         }
         const govideomode = () => {
             location.href = `clubhome?usernamed=${USERHASID}&giveroomid=${ROOM_ID}`
+        }
+        const leaveMeeting = () => {
+            location.href = `${ROOM_ID}`
+        }
+
+        function copylink() {
+            var textArea = document.createElement("textarea");
+            textArea.value = `${document.location.href}`
+            document.body.appendChild(textArea);
+
+
+            /* Select the text field */
+            textArea.select();
+            textArea.setSelectionRange(0, 99999); /* For mobile devices */
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy");
+
+
+            /* Alert the copied text */
+            alert("Copied Invite Link : " + textArea.value);
+
+            document.body.removeChild(textArea);
         }
 
     </script>

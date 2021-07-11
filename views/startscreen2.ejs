@@ -137,6 +137,11 @@
         var ubn = document.getElementById('userhasid')
         var rbn = document.getElementById('roomid')
 
+        const ROOM_ID = "<%= roomhasid %>"
+        if (ROOM_ID) {
+            rbn.value = ROOM_ID
+        }
+
         const chatbn = () => {
             if (ubn.value.length > 0 && rbn.value.length > 0) {
                 location.href = `clubreq?usernamed=${ubn.value}&giveroomid=${rbn.value}`
@@ -152,6 +157,7 @@
             }
         }
 
+
         let text = $("input");
         // when press enter send message
         $('html').keydown(function (e) {
@@ -160,9 +166,32 @@
             }
 
         });
+
     </script>
 
 
 </body>
+<script>
+    var textArea = document.createElement("textarea");
+    textArea.value = "Room id has been filled using invite link, Please enter the username";
+
+    // Avoid scrolling to bottom
+    textArea.style.top = "4%";
+    textArea.style.left = "30%";
+    textArea.style.width = "40%";
+    textArea.style.border = "none";
+    textArea.style.fontWeight = "600";
+    textArea.style.backgroundColor = "transparent";
+
+    textArea.style.color = "white";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    setTimeout(
+        function () {
+            document.body.removeChild(textArea);
+        }, 5000
+    )
+</script>
 
 </html>

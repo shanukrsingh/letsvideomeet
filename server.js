@@ -1,3 +1,7 @@
+// Server Side Code
+
+
+// import essential packages
 const express = require('express')
 const app = express()
 const server = require('http').Server(app)
@@ -5,20 +9,27 @@ const io = require('socket.io')(server)
 const { v4: uuidV4 } = require('uuid')
 const { uniqueNamesGenerator, names } = require('unique-names-generator');
 var mongo = require('mongodb').MongoClient;
+
+
+// global variables
 var lastguy = []
 var vy;
 var giveroom;
-
 var mynamesi = new Map()
 
 
+// set render engine
 app.set('view engine', 'ejs')
+
+
+// import middleware
 app.use(express.static('public'))
 
+
+// routing configuration
 app.get('/', (req, res) => {
     res.render('startscreen')
 })
-
 
 app.get('/clubreq', function (req, res) {
     vy = req.query.usernamed;
@@ -73,22 +84,33 @@ app.get('/:room', (req, res) => {
     res.render('startscreen2', { roomhasid: req.params.room })
 })
 
+
+// listen to port
 server.listen(process.env.PORT || 3000)
 
 
+// main function
 async function main() {
 
+
+    // create mongodb client
     const client = await createClient();
 
 
+    // listen for connection from clients
     io.on('connection', socket => {
 
 
+        // listen for connection before and after video meeting
         socket.on('join-roomfromchat', (roomId, userId) => {
+
+
+            // join a room and load the chats of the room
             socket.join(roomId)
             let chat = client.db('chatbase').collection(`${roomId}`);
 
 
+            // load chats of a room from database and send to every client
             chat.find().limit(100).sort({ _id: 1 }).toArray(function (err, res) {
                 if (err) {
                     throw err;
@@ -102,8 +124,8 @@ async function main() {
             });
 
 
+            //send messages to the clients of the same room and insert to database
             socket.on('message', (message) => {
-                //send message to the same room
                 var mesar = { message, userId }
                 chat.insertOne({ 'username': `${userId}`, 'message': `${message}` })
                 io.to(roomId).emit('createMessage', (mesar))
@@ -112,12 +134,20 @@ async function main() {
         })
 
 
+        // listen for connection in video meeting
         socket.on('join-room', (roomId, userId) => {
+
+
+            // join room and load chats of the room
             let chat = client.db('chatbase').collection(`${roomId}`);
             socket.join(roomId)
+
+
+            // connect the new user to the other users of the same room
             socket.broadcast.to(roomId).emit('user-connected', userId)
 
 
+            // store username in public variable and send the username to users of the same room
             socket.on('createName', (ky) => {
 
                 var tmp = mynamesi.get(roomId)
@@ -133,6 +163,7 @@ async function main() {
                 io.to(roomId).emit('giveName', mynamesi.get(roomId))
 
 
+                // load chats from database and emit to the newly connected user
                 chat.find().limit(100).sort({ _id: 1 }).toArray(function (err, res) {
                     if (err) {
                         throw err;
@@ -147,14 +178,15 @@ async function main() {
             })
 
 
-
+            //send message to users of the same room
             socket.on('message', (message) => {
-                //send message to the same room
                 var mesar = { message, userId }
                 chat.insertOne({ 'username': `${userId}`, 'message': `${message}` })
                 io.to(roomId).emit('createMessage', (mesar))
             });
 
+
+            // inform other users when a user disconnects and update the global variable
             socket.on('disconnect', () => {
                 lastguy.push(roomId)
 
@@ -176,9 +208,10 @@ async function main() {
 
 }
 
-
 main()
 
+
+// connect to mongodb to handle messages
 async function createClient() {
     var uri = "mongodb://sampleuser11:sample11pass@cluster0-shard-00-00.2vk0e.mongodb.net:27017,cluster0-shard-00-01.2vk0e.mongodb.net:27017,cluster0-shard-00-02.2vk0e.mongodb.net:27017/chatbase?ssl=true&replicaSet=atlas-af2y8l-shard-0&authSource=admin&retryWrites=true&w=majority";
     const client = new mongo(uri, { useNewUrlParser: true, useUnifiedTopology: true })

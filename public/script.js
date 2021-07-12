@@ -1,29 +1,37 @@
+// Client Side Code
+
+
+// import essential packages and declare global variables
 const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
 
 var myname = new Map()
 var mynamei = []
-var mynamen = []
-
 
 const myPeer = new Peer(USERHASID, {
     debug: 2
 });
-
-
 
 const myVideo = document.createElement('video')
 var myStream;
 myVideo.muted = true
 const peers = {}
 
+
+// get the media feed of the user
 navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
 }).then(stream => {
+
+
+    // get the client's media feed on its own device
     myStream = stream
     addVideoStream(myVideo, stream)
 
+
+    // listen for call from other users and add their feed to its own device
+    // and remove their feed when that other user disconnects
     myPeer.on('call', call => {
         call.answer(stream)
         const video = document.createElement('video')
@@ -38,11 +46,14 @@ navigator.mediaDevices.getUserMedia({
         peers[call.peer] = call;
     })
 
+
+    // handle connection when new user connects
     socket.on('user-connected', userId => {
         connectToNewUser(userId, stream)
     })
 
 
+    // get the updated list of users and update the global variable
     socket.on('giveName', (ky) => {
         mynamei = ky
         console.log(mynamei)
@@ -51,17 +62,19 @@ navigator.mediaDevices.getUserMedia({
 
     })
 
+
+    // get the input from chatbox
     let text = $("input");
-    // when press enter send message
+
     $('html').keydown(function (e) {
         if (e.which == 13 && text.val().length !== 0) {
-            // console.log(myname)
             socket.emit('message', text.val());
             text.val('')
-
         }
-
     });
+
+
+    // append new message to the chatbox
     socket.on("createMessage", (mesar) => {
         if (mesar.userId == myPeer.id) {
             $(".messages").append(`<li class="message" style="text-align: right !important;"><span style = "color: #363875;">${mesar.userId} (me)</span><br/>${mesar.message}</li>`);
@@ -75,7 +88,7 @@ navigator.mediaDevices.getUserMedia({
 })
 
 
-
+// close connection to the disconnected user
 socket.on('user-disconnected', userId => {
     if (peers[userId]) peers[userId].close()
     var ind = mynamei.indexOf(userId)
@@ -83,12 +96,16 @@ socket.on('user-disconnected', userId => {
     updatenames();
 })
 
+
+// asks from server to join room and send the username
 myPeer.on('open', id => {
     socket.emit('join-room', ROOM_ID, id)
     socket.emit('createName', id)
 })
 
 
+// add media feed of the newly connected user to its own device and remove the feed when
+// that user disconnects
 function connectToNewUser(userId, stream) {
     const call = myPeer.call(userId, stream)
     const video = document.createElement('video')
@@ -104,6 +121,7 @@ function connectToNewUser(userId, stream) {
 }
 
 
+// creates a new video element
 function addVideoStream(video, stream) {
     video.srcObject = stream
     video.addEventListener('loadedmetadata', () => {
@@ -112,6 +130,8 @@ function addVideoStream(video, stream) {
     videoGrid.append(video)
 }
 
+
+// update the list of users in the public variable
 function updatenames() {
 
     document.querySelector('.userslist').innerHTML = ' ';
@@ -122,12 +142,17 @@ function updatenames() {
     }
 }
 
+
+// scroll chatbox to the bottom
 const scrollToBottom = () => {
     var d = $('.main__chat_window');
     d.scrollTop(d.prop("scrollHeight"));
 }
 
 
+// button handlers
+
+// control microphone
 const muteUnmute = () => {
     const enabled = myStream.getAudioTracks()[0].enabled;
     if (enabled) {
@@ -139,10 +164,12 @@ const muteUnmute = () => {
     }
 }
 
+// exit meeting
 const leaveMeeting = () => {
     location.href = `clubreq?usernamed=${USERHASID}&giveroomid=${ROOM_ID}`
 }
 
+// control camera
 var cameraC = () => {
     const enabled = myStream.getVideoTracks()[0].enabled;
     if (enabled) {
@@ -182,6 +209,7 @@ const unsetCamera = () => {
     document.querySelector('.main__video_button').innerHTML = html;
 }
 
+// toggle chatbox
 const controlchat = () => {
     var dispattribute = document.querySelector('.cab2').getAttribute('id')
     if (dispattribute == 'dispon') {
@@ -196,6 +224,8 @@ const controlchat = () => {
 
     scrollToBottom()
 }
+
+// toggle list of users
 const controlusers = () => {
     var dispattribute = document.querySelector('.cab2b').getAttribute('id')
     if (dispattribute == 'dispon') {
@@ -209,6 +239,7 @@ const controlusers = () => {
     }
 }
 
+// copy invite link
 const copylink = () => {
     var textArea = document.createElement("textarea");
     textArea.value = `${document.location.href}`
@@ -228,21 +259,3 @@ const copylink = () => {
 
     document.body.removeChild(textArea);
 }
-
-
-// var waitc;
-// const setButtons = () => {
-//     waitc = true;
-//     console.log(document.querySelector('.cab1-footer').getAttribute('style'));
-//     document.querySelector('.cab1-footer').setAttribute('style', "display: flex;");
-//     console.log(document.querySelector('.cab1-footer').getAttribute('style'));
-//     setTimeout(function(){
-//         // waitc = false;
-//         if (waitc == true) {
-//             return;
-//         }
-//         document.querySelector('.cab1-footer').setAttribute('style', "display: none;");
-//         console.log('finally complete');
-//     },5000);
-//     console.log('complete');
-// }

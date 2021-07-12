@@ -1,57 +1,51 @@
-/* style for video feed */
-#video-grid {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-video {
-    height: 300px;
-    width: 400px;
-    object-fit: cover;
-    padding: 8px;
-}
-
-
 /* public styles */
-body{
+body {
     margin: 0 !important;
     padding: 0 !important;
 }
 
-h1,h2,h3,h4,h5,h6{
-    color:white;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: white;
     padding: 10px 0 0 15px;
 }
 
-.bag{
+.bag {
     height: 100vh;
     display: flex;
+    justify-content: center;
 }
 
-.cab2,.cab2b{
+
+/* chatbbox */
+.cab2,
+.cab2b {
     background-color: rgb(22, 22, 22);
-    max-width: 20% !important;
-    min-width: 20% !important;
-    flex: 0.2;
+    max-width: 30% !important;
+    min-width: 30% !important;
+    flex: 0.3;
     display: flex;
     flex-direction: column;
 }
 
-
-/* style for chat section */
 .main__chat_window {
     flex-grow: 1;
     overflow-y: auto;
     -ms-overflow-style: none;
-    scrollbar-width: none; 
+    scrollbar-width: none;
 }
 
-.main__chat_window::-webkit-scrollbar,.cab1-body::-webkit-scrollbar{
+.main__chat_window::-webkit-scrollbar,
+.cab1-body::-webkit-scrollbar {
     display: none;
 }
 
-.messages,.userslist{
+.messages,
+.userslist {
     margin: 0 !important;
     padding: 0 !important;
     word-wrap: break-word !important;
@@ -60,7 +54,8 @@ h1,h2,h3,h4,h5,h6{
     flex-direction: column;
 }
 
-.message,.usernames{
+.message,
+.usernames {
     word-wrap: break-word !important;
     flex-wrap: wrap;
     flex-direction: column;
@@ -71,8 +66,8 @@ h1,h2,h3,h4,h5,h6{
     background-color: #6264A7;
 }
 
-.message span{
-    font-weight:500;
+.message span {
+    font-weight: 500;
 }
 
 .main__message_container {
@@ -85,7 +80,8 @@ h1,h2,h3,h4,h5,h6{
 .main__message_container input {
     position: fixed;
     bottom: 2%;
-    width: 18% !important;
+    height: 5% !important;
+    width: 23% !important;
     border: none !important;
     border-radius: 6px;
     padding: 0 0.5%;
@@ -93,44 +89,51 @@ h1,h2,h3,h4,h5,h6{
     color: black;
 }
 
-
-/* style for video feed and controls */
-.cab1{
-    flex: 1;
+.cab2header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+
 }
 
-.cab1-header{
-    background-color: black;
+.chaticon {
+    font-size: 150%;
     color: white;
-}
-
-.cab1-body{
+    display: flex;
+    justify-content: flex-end;
+    align-self: center;
+    padding-right: 30px;
     flex-grow: 1;
-    align-content: center !important;
-    overflow-y: auto;
-    background-color: black;
-}
-
-.cab1-footer{
-    display: flex;
-    justify-content: center;
-}
-
-.buttons_controls{
-    position: fixed;
-    bottom: 3%;
-    color: white;
-    font-size: 175%;
     cursor: pointer;
 }
 
-.fa-stack:hover .fa-circle{
-    color: #9296ff;
 
-} 
+/* style for controls */
+.chaticon:hover {
+    border: none !important;
+    color: #8776F2;
+}
 
-.fa-circle {
-    color: #6264A7;
-} 
+.topheader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20%;
+
+}
+
+.closeheader {
+    position: fixed;
+    top: 1%;
+    right: 0;
+    font-size: 200%;
+    cursor: pointer;
+}
+
+.fa-stack {
+    margin-top: 5% !important;
+}
+
+.fa-stack:hover .fa-circle {
+    color: rgb(163, 7, 7) !important;
+
+}

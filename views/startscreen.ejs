@@ -8,10 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lets Video Meet | Input User</title>
 
+
+    <!-- import styles -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="styles3.css">
 
+
+    <!-- import scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
@@ -21,96 +26,17 @@
 
 </head>
 
-<style>
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        color: white;
-        padding: 10px 0 0 15px;
-    }
-
-    .topheader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 20%;
-
-    }
-
-    .bag {
-        display: flex;
-        height: 100vh;
-        justify-content: center;
-        padding: 10%;
-    }
-
-    form {
-        background-color: #8776F2;
-        border-radius: 12px;
-        padding: 5%;
-        text-align: center;
-    }
-
-    .cab2 {
-        max-width: 50%;
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-    }
-
-    .formbox {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        min-width: 40%;
-        color: white;
-        font-size: 120%;
-    }
-
-    .formbox input {
-        border-radius: 6px;
-        border: none;
-        padding: 0.5% 2%;
-    }
-
-    .chaticon {
-        font-size: 120%;
-        color: white;
-        cursor: pointer;
-        padding-left: 8%;
-        justify-self: center;
-    }
-
-    .chaticon .fas {
-        font-size: 160%;
-    }
-
-    .bttns {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: center;
-    }
-
-    .chaticon:hover {
-        border: none !important;
-        color: black;
-    }
-</style>
-
 <body background="wavey.svg">
+
+
+    <!-- main container -->
     <div class="bag">
         <div class="topheader">
             <h2>Lets Video <br> Meet</h2>
         </div>
+
+
+        <!-- form container -->
         <div class="cab2">
             <h2 style="text-align: center; padding-bottom: 2%;">Input User</h2>
             <div class="formbox">
@@ -118,6 +44,9 @@
                     <b>Username : </b> <input type="text" name="usernamed" size="30" id="userhasid" /><br><br>
                     <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Room : </b> <input type="text" name="giveroomid" size="30"
                         id="roomid" /><br><br>
+
+
+                    <!-- buttons container -->
                     <div class="bttns">
                         <div onclick="chatbn()" class="chaticon">
                             <i class="fas fa-comment-alt"></i>
@@ -133,10 +62,14 @@
         </div>
     </div>
 
+
+    <!-- button handlers -->
     <script>
         var ubn = document.getElementById('userhasid')
         var rbn = document.getElementById('roomid')
 
+
+        // redirect to chatscreen
         const chatbn = () => {
             if (ubn.value.length > 0 && rbn.value.length > 0) {
                 location.href = `clubreq?usernamed=${ubn.value}&giveroomid=${rbn.value}`
@@ -144,6 +77,9 @@
                 window.alert('please input the username and room')
             }
         }
+
+
+        // redirect to video meeting
         const videobn = () => {
             if (ubn.value.length > 0 && rbn.value.length > 0) {
                 location.href = `clubhome?usernamed=${ubn.value}&giveroomid=${rbn.value}`
@@ -152,8 +88,10 @@
             }
         }
 
+
+        // redirect to video meeting
+        // when enter is pressed
         let text = $("input");
-        // when press enter send message
         $('html').keydown(function (e) {
             if (e.which == 13 && text.val().length !== 0) {
                 videobn()

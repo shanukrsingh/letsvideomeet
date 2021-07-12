@@ -5,19 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- import styles -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
+    <link rel="stylesheet" href="styles2.css">
 
     <title>Lets Video Meet | Chat</title>
 
+
+    <!-- scripts and packages -->
     <script>
         const ROOM_ID = "<%= roomId %>"
         const USERHASID = "<%= userhasname %>"
         window.history.replaceState('', '', `/${ROOM_ID}`);
     </script>
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
@@ -25,152 +28,20 @@
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
 
-    <style>
-        body {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            color: white;
-            padding: 10px 0 0 15px;
-        }
-
-        .bag {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-        }
-
-        .cab2,
-        .cab2b {
-            background-color: rgb(22, 22, 22);
-            max-width: 30% !important;
-            min-width: 30% !important;
-            flex: 0.3;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .main__chat_window {
-            flex-grow: 1;
-            overflow-y: auto;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .main__chat_window::-webkit-scrollbar,
-        .cab1-body::-webkit-scrollbar {
-            display: none;
-        }
-
-        .messages,
-        .userslist {
-            margin: 0 !important;
-            padding: 0 !important;
-            word-wrap: break-word !important;
-            list-style: none;
-            flex-wrap: wrap;
-            flex-direction: column;
-        }
-
-        .message,
-        .usernames {
-            word-wrap: break-word !important;
-            flex-wrap: wrap;
-            flex-direction: column;
-            margin: 3% !important;
-            padding: 2% 4% !important;
-            border-radius: 6px;
-            color: white;
-            background-color: #6264A7;
-        }
-
-        .message span {
-            font-weight: 500;
-        }
-
-        .main__message_container {
-            min-height: 8% !important;
-            display: flex;
-            background-color: transparent;
-            justify-content: center;
-        }
-
-        .main__message_container input {
-            position: fixed;
-            bottom: 2%;
-            height: 5% !important;
-            width: 23% !important;
-            border: none !important;
-            border-radius: 6px;
-            padding: 0 0.5%;
-            background-color: white;
-            color: black;
-        }
-
-        .cab2header {
-            display: flex;
-            flex-direction: row;
-
-        }
-
-        .chaticon {
-            font-size: 150%;
-            color: white;
-            display: flex;
-            justify-content: flex-end;
-            align-self: center;
-            padding-right: 30px;
-            flex-grow: 1;
-            cursor: pointer;
-        }
-
-        .chaticon:hover {
-            border: none !important;
-            color: #8776F2;
-        }
-
-        .topheader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 20%;
-
-        }
-
-        .closeheader {
-            position: fixed;
-            top: 1%;
-            right: 0;
-            font-size: 200%;
-            cursor: pointer;
-        }
-
-        .fa-stack {
-            margin-top: 5% !important;
-        }
-
-        .fa-stack:hover .fa-circle {
-            color: rgb(163, 7, 7) !important;
-
-        }
-    </style>
 </head>
 
 <body background="wavey.svg">
 
 
-
+    <!-- main container -->
     <div class="bag">
         <div class="topheader">
             <h2>Lets Video <br> Meet</h2>
         </div>
+
+
+        <!-- chats container -->
         <div class="cab2">
 
             <div class="cab2header">
@@ -192,6 +63,9 @@
 
 
         </div>
+
+
+        <!-- controls container -->
         <div class="closeheader">
             <span class="fa-stack" style="align-items: center;">
                 <i class="fas fa-circle fa-stack-2x" style="color:#6264A7;"></i>
@@ -223,10 +97,7 @@
     </div>
 
 
-
-
-
-
+    <!-- essential scripts and packages -->
     <script src="/socket.io/socket.io.js"></script>
     <script defer>
         (function () {
@@ -240,13 +111,13 @@
             // when press enter send message
             $('html').keydown(function (e) {
                 if (e.which == 13 && text.val().length !== 0) {
-                    // console.log(myname)
                     socket.emit('message', text.val());
                     text.val('')
-
                 }
-
             });
+
+
+            // append new message to chatbox
             socket.on("createMessage", (mesar) => {
                 if (mesar.userId == USERHASID) {
                     $(".messages").append(`<li class="message" style="text-align: right !important;"><span style = "color: #363875;">${mesar.userId} (me)</span><br/>${mesar.message}</li>`);
@@ -261,6 +132,9 @@
 
         })();
 
+
+
+        // button handlers
         const scrollToBottom = () => {
             var d = $('.main__chat_window');
             d.scrollTop(d.prop("scrollHeight"));
@@ -272,6 +146,8 @@
             location.href = `${ROOM_ID}`
         }
 
+
+        // copy invite link
         function copylink() {
             var textArea = document.createElement("textarea");
             textArea.value = `${document.location.href}`
@@ -291,7 +167,6 @@
 
             document.body.removeChild(textArea);
         }
-
     </script>
 </body>
 

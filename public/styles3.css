@@ -1,0 +1,87 @@
+/* public styles */
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: white;
+    padding: 10px 0 0 15px;
+}
+
+.topheader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20%;
+
+}
+
+.bag {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    padding: 10%;
+}
+
+
+/* form style */
+form {
+    background-color: #8776F2;
+    border-radius: 12px;
+    padding: 5%;
+    text-align: center;
+}
+
+.cab2 {
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.formbox {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 40%;
+    color: white;
+    font-size: 120%;
+}
+
+.formbox input {
+    border-radius: 6px;
+    border: none;
+    padding: 0.5% 2%;
+}
+
+
+/* buttons style */
+.chaticon {
+    font-size: 120%;
+    color: white;
+    cursor: pointer;
+    padding-left: 8%;
+    justify-self: center;
+}
+
+.chaticon .fas {
+    font-size: 160%;
+}
+
+.bttns {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.chaticon:hover {
+    border: none !important;
+    color: black;
+}

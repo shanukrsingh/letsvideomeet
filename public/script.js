@@ -42,8 +42,16 @@ navigator.mediaDevices.getUserMedia({
             console.log('removed from : ' + myPeer.id);
             video.remove()
         })
-        console.log(call)
         peers[call.peer] = call;
+
+        for (var element in peers) {
+            console.log(element)
+            if (mynamei.indexOf(element) < 0)
+                mynamei.push(element)
+        }
+
+        updatenames()
+
     })
 
 
@@ -55,12 +63,11 @@ navigator.mediaDevices.getUserMedia({
 
     // get the updated list of users and update the global variable
     socket.on('giveName', (ky) => {
-        mynamei = ky
-        console.log(mynamei)
 
         updatenames();
 
     })
+
 
 
     // get the input from chatbox
@@ -90,7 +97,10 @@ navigator.mediaDevices.getUserMedia({
 
 // close connection to the disconnected user
 socket.on('user-disconnected', userId => {
-    if (peers[userId]) peers[userId].close()
+    if (peers[userId]) {
+        peers[userId].close()
+        delete peers[userId]
+    }
     var ind = mynamei.indexOf(userId)
     mynamei.splice(ind, 1)
     updatenames();
@@ -99,8 +109,11 @@ socket.on('user-disconnected', userId => {
 
 // asks from server to join room and send the username
 myPeer.on('open', id => {
+    mynamei.push(`${myPeer.id}`)
+    updatenames()
     socket.emit('join-room', ROOM_ID, id)
     socket.emit('createName', id)
+
 })
 
 
@@ -118,6 +131,15 @@ function connectToNewUser(userId, stream) {
     })
 
     peers[userId] = call
+
+    for (var element in peers) {
+        console.log(element)
+        if (mynamei.indexOf(element) < 0)
+            mynamei.push(element)
+    }
+
+    updatenames()
+
 }
 
 
@@ -138,7 +160,6 @@ function updatenames() {
 
     for (let temp of mynamei) {
         $(".userslist").append(`<li class="usernames"><span> ${temp}</span></li>`);
-        console.log(temp)
     }
 }
 

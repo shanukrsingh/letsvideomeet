@@ -40,6 +40,10 @@
             <h2>Lets Video <br> Meet</h2>
         </div>
 
+        <div class="footbar"
+            style="position: fixed;bottom: 2%;left: 1%; color: white; background-color: #8776F2; border-radius: 6px; padding: 1%;">
+
+        </div>
 
         <!-- chats container -->
         <div class="cab2">
@@ -105,6 +109,9 @@
             // Connect to socket.io
             const socket = io('/');
             console.log('Connected to socket...');
+
+            $(".footbar").append(`<h6 style= "margin: 0 !important; padding: 0 !important;">username : ${USERHASID}<br>room ID : ${ROOM_ID}</h6>`)
+
             socket.emit('join-roomfromchat', ROOM_ID, USERHASID)
 
             let text = $("input");

@@ -166,7 +166,7 @@ const muteUnmute = () => {
 
 // exit meeting
 const leaveMeeting = () => {
-    location.href = `clubreq?usernamed=${USERHASID}&giveroomid=${ROOM_ID}`
+    location.href = `clubreq?usernamed=${USERHASID}&giveroomid=${ROOM_ID}&og=true`
 }
 
 // control camera

@@ -80,7 +80,7 @@
         // go to chatscreen
         const chatbn = () => {
             if (ubn.value.length > 0 && rbn.value.length > 0) {
-                location.href = `clubreq?usernamed=${ubn.value}&giveroomid=${rbn.value}`
+                location.href = `clubreq?usernamed=${ubn.value}&giveroomid=${rbn.value}&og=false`
             } else {
                 window.alert('please input the username and room')
             }
@@ -90,7 +90,7 @@
         // go to video meeting
         const videobn = () => {
             if (ubn.value.length > 0 && rbn.value.length > 0) {
-                location.href = `clubhome?usernamed=${ubn.value}&giveroomid=${rbn.value}`
+                location.href = `clubhome?usernamed=${ubn.value}&giveroomid=${rbn.value}&og=false`
             } else {
                 window.alert('please input the username and room')
             }

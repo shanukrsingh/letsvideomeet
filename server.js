@@ -12,7 +12,6 @@ var mongo = require('mongodb').MongoClient;
 
 
 // global variables
-var lastguy = []
 var vy;
 var giveroom;
 var mynamesi = new Map()
@@ -34,16 +33,22 @@ app.get('/', (req, res) => {
 app.get('/clubreq', function (req, res) {
     vy = req.query.usernamed;
     giveroom = req.query.giveroomid;
+    var og = req.query.og
 
     var tmp = mynamesi.get(giveroom)
-    if (tmp == null) {
-        tmp = []
+    console.log("users = " + tmp)
+
+    var ind = getIndex(vy)
+    console.log("index = " + ind)
+
+    if (og == 'true') {
+        ind = -1;
     }
 
-    var ind = tmp.indexOf(vy)
     if (ind >= 0) {
         res.redirect('/')
     } else {
+        updateUsers(vy, giveroom)
         res.render('chatscreen', { roomId: giveroom, userhasname: vy })
     }
 
@@ -53,25 +58,26 @@ app.get('/clubreq', function (req, res) {
 app.get('/clubhome', function (req, res) {
     vy = req.query.usernamed;
     giveroom = req.query.giveroomid;
+    var og = req.query.og
 
     var tmp = mynamesi.get(giveroom)
-    if (tmp == null) {
-        tmp = []
+    console.log("users = " + tmp)
+
+
+    var ind = getIndex(vy)
+    if (og == 'true') {
+        ind = -1;
     }
 
-    var ind = tmp.indexOf(vy)
     if (ind >= 0) {
         res.redirect('/')
     } else {
+        updateUsers(vy, giveroom)
         res.redirect(`/rooms`)
     }
 
 });
 
-app.get('/endscreen', (req, res) => {
-    res.render('endscreen', { roomId: lastguy[(lastguy.length - 1)] })
-    lastguy.pop()
-})
 
 app.get('/rooms', (req, res) => {
     console.log('given name : ' + vy)
@@ -131,6 +137,19 @@ async function main() {
                 io.to(roomId).emit('createMessage', (mesar))
             });
 
+
+            // handle when a user leaves chat screen
+            socket.on('disconnect', () => {
+
+                var tmp = []
+                tmp = mynamesi.get(roomId)
+                var ind = tmp.indexOf(userId)
+                tmp.splice(ind, 1)
+                mynamesi.set(roomId, tmp)
+
+                console.log(userId + " has disconnected")
+            })
+
         })
 
 
@@ -150,16 +169,6 @@ async function main() {
             // store username in public variable and send the username to users of the same room
             socket.on('createName', (ky) => {
 
-                var tmp = mynamesi.get(roomId)
-                if (tmp == null) {
-                    tmp = []
-                    tmp.push(ky)
-                } else {
-                    tmp.push(ky)
-                }
-                mynamesi.set(roomId, tmp)
-
-                console.log(mynamesi.get(roomId))
                 io.to(roomId).emit('giveName', mynamesi.get(roomId))
 
 
@@ -188,7 +197,6 @@ async function main() {
 
             // inform other users when a user disconnects and update the global variable
             socket.on('disconnect', () => {
-                lastguy.push(roomId)
 
                 var tmp = []
                 tmp = mynamesi.get(roomId)
@@ -196,9 +204,11 @@ async function main() {
                 tmp.splice(ind, 1)
                 mynamesi.set(roomId, tmp)
 
-                socket.broadcast.to(roomId).emit('user-disconnected', userId)
+                console.log(userId + " has disconnected")
 
+                socket.broadcast.to(roomId).emit('user-disconnected', userId)
             })
+
         })
 
 
@@ -218,4 +228,32 @@ async function createClient() {
     await client.connect()
     console.log('MongoDB connected...');
     return client;
+}
+
+
+// maintain the list on users that are online
+function updateUsers(uid, rid) {
+    var tmp = mynamesi.get(rid)
+    if (tmp == null) {
+        tmp = []
+        tmp.push(uid)
+    } else {
+        tmp.push(uid)
+    }
+    mynamesi.set(rid, tmp)
+
+    console.log(mynamesi.get(rid))
+}
+
+
+// search if a user is online
+function getIndex(vy) {
+    var indx;
+    for (let value of mynamesi.values()) {
+        indx = value.indexOf(vy);
+        console.log("tst :" + value)
+        if (indx >= 0)
+            return indx;
+    }
+    return indx;
 }
